@@ -410,12 +410,12 @@ public class Club implements Serializable{
         return opcio;
     }
 
-    private void persistirDadesClub() throws IOException {
+        private void persistirDadesClub() throws IOException {
         File file = new File("src\\files\\DadesClub.dat");
         FileOutputStream fileOutput = new FileOutputStream(file);
         ObjectOutputStream serialitzador = new ObjectOutputStream(fileOutput);
-        serialitzador.writeObject(plantilla);
-        serialitzador.writeObject(socis);
+
+        serialitzador.writeObject(this);
         serialitzador.writeObject(Soci.getNumLocalitat());
         serialitzador.writeObject(Soci.getNumSocis());
         serialitzador.writeObject(Plantilla.getNumsEmpleats());
@@ -427,13 +427,87 @@ public class Club implements Serializable{
         if (file.isFile()) {
             FileInputStream fileInput = new FileInputStream(file);
             ObjectInputStream deserialitzador = new ObjectInputStream(fileInput);
-            plantilla = (HashMap<String, Plantilla>) deserialitzador.readObject();
-            socis = (HashMap<String, Soci>) deserialitzador.readObject();
+
+            Club club = new Club();
+            club = ((Club) deserialitzador.readObject());
+            this.setNom(club.getNom());
+            this.setCIF(club.getCIF());
+            this.setAdreça(club.getAdreça());
+            this.setTelefon(club.getTelefon());
+            this.setEmail(club.getEmail());
+            this.setWeb(club.getWeb());
+            this.setPlantilla(club.getPlantilla());
+            this.setSocis(club.getSocis());
+
             Soci.setNumLocalitat(((int)deserialitzador.readObject()));
             Soci.setNumSocis(((int)deserialitzador.readObject()));
             Plantilla.setNumsEmpleats(((int)deserialitzador.readObject()));
             Jugador.setDorsals(((int)deserialitzador.readObject()));
             
         }
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getCIF() {
+        return CIF;
+    }
+
+    public void setCIF(String cIF) {
+        CIF = cIF;
+    }
+
+    public String getAdreça() {
+        return adreça;
+    }
+
+    public void setAdreça(String adreça) {
+        this.adreça = adreça;
+    }
+
+    public String getTelefon() {
+        return telefon;
+    }
+
+    public void setTelefon(String telefon) {
+        this.telefon = telefon;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getWeb() {
+        return web;
+    }
+
+    public void setWeb(String web) {
+        this.web = web;
+    }
+
+    public HashMap<String, Plantilla> getPlantilla() {
+        return plantilla;
+    }
+
+    public void setPlantilla(HashMap<String, Plantilla> plantilla) {
+        this.plantilla = plantilla;
+    }
+
+    public HashMap<String, Soci> getSocis() {
+        return socis;
+    }
+
+    public void setSocis(HashMap<String, Soci> socis) {
+        this.socis = socis;
     }
 }
