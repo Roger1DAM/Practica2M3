@@ -394,51 +394,6 @@ public class Club implements Serializable{
         } while (!sortir);
     }
 
-    private void obtenirVariablesEstatiques() {
-        int maxNumEmpleat = 0;
-        int maxDorsal = 0;
-        int maxNumSoci = 0;
-        int maxLocalitat = 0;
-        ArrayList<Plantilla> plantillaArray = new ArrayList<>();
-        Iterator<Entry<String, Plantilla>> iterador2 = plantilla.entrySet().iterator();
-            while (iterador2.hasNext()) {
-                Entry<String, Plantilla> entry = iterador2.next();
-                plantillaArray.add(entry.getValue());
-        }
-
-        for (Plantilla p : plantillaArray) {
-            if (p.getNumEmpleat() > maxNumEmpleat) {
-                maxNumEmpleat = p.getNumEmpleat();
-            }
-            if (p instanceof Jugador) {
-                Jugador jugador = (Jugador) p;
-                if (jugador.getDorsal() > maxDorsal) {
-                    maxDorsal = jugador.getDorsal();
-                }
-            } 
-        }
-
-        ArrayList<Soci> socisArray = new ArrayList<>();
-        Iterator<Entry<String, Soci>> iterador = socis.entrySet().iterator();
-            while (iterador.hasNext()) {
-                Entry<String, Soci> entry = iterador.next();
-                socisArray.add(entry.getValue());
-        }
-
-        for (Soci s : socisArray) {
-            if (s.getNumSoci() > maxNumSoci) {
-                maxNumSoci = s.getNumSoci();
-            }
-            if (s.getLocalitat() > maxLocalitat) {
-                maxLocalitat = s.getLocalitat();
-            }
-        }
-        Soci.setNumLocalitat(maxLocalitat);
-        Soci.setNumSocis(maxNumSoci);
-        Plantilla.setNumsEmpleats(maxNumEmpleat);
-        Jugador.setDorsals(maxDorsal);
-    }
-
     private int comprovarInputValid() {
         Scanner kb = new Scanner(System.in);
         int opcio = 0;
@@ -461,6 +416,10 @@ public class Club implements Serializable{
         ObjectOutputStream serialitzador = new ObjectOutputStream(fileOutput);
         serialitzador.writeObject(plantilla);
         serialitzador.writeObject(socis);
+        serialitzador.writeObject(Soci.getNumLocalitat());
+        serialitzador.writeObject(Soci.getNumSocis());
+        serialitzador.writeObject(Plantilla.getNumsEmpleats());
+        serialitzador.writeObject(Jugador.getDorsals());
     }
 
     private void llegirDadesFitxer() throws IOException, ClassNotFoundException {
@@ -470,7 +429,11 @@ public class Club implements Serializable{
             ObjectInputStream deserialitzador = new ObjectInputStream(fileInput);
             plantilla = (HashMap<String, Plantilla>) deserialitzador.readObject();
             socis = (HashMap<String, Soci>) deserialitzador.readObject();
-            obtenirVariablesEstatiques();
+            Soci.setNumLocalitat(((int)deserialitzador.readObject()));
+            Soci.setNumSocis(((int)deserialitzador.readObject()));
+            Plantilla.setNumsEmpleats(((int)deserialitzador.readObject()));
+            Jugador.setDorsals(((int)deserialitzador.readObject()));
+            
         }
     }
 }
